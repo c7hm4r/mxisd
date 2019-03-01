@@ -170,7 +170,12 @@ public class AppSvcManager {
                 return;
             }
 
-            if (!StringUtils.equals("invite", GsonUtil.getStringOrNull(ev, "membership"))) {
+            JsonObject content = EventKey.Content.findObj(ev).orElseGet(() -> {
+                log.debug("No content found, falling back to full object");
+                return ev;
+            });
+
+            if (!StringUtils.equals("invite", GsonUtil.getStringOrNull(content, "membership"))) {
                 log.debug("This is not an invite event, skipping");
                 return;
             }
